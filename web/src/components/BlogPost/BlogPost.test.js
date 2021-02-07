@@ -1,4 +1,4 @@
-import { render, screen } from '@redwoodjs/testing'
+import { render, screen, waitFor } from '@redwoodjs/testing'
 import BlogPost from './BlogPost'
 
 const POST = {
@@ -23,6 +23,13 @@ describe('BlogPost', () => {
     expect(screen.getByText(POST.body)).toBeInTheDocument()
   })
 
+  it('renders comments when displaying a full blog post', async () => {
+    const comment = standard().comments[0]
+    render(<BlogPost post={POST} />)
+    await waitFor(() =>
+      expect(screen.getByText(comment.body)).toBeInTheDocument()
+    )
+  })
   it('renders a summary of a blog post', () => {
     render(<BlogPost post={POST} summary={true} />)
     expect(screen.getByText(POST.title)).toBeInTheDocument()
@@ -33,5 +40,14 @@ describe('BlogPost', () => {
       )
     ).toBeInTheDocument()
   })
+
+  it('does not render comments when displaying a summary', async () => {
+    const comment = standard().comments[0]
+    render(<BlogPost post={POST} summary={true} />)
+    await waitFor(() =>
+      expect(screen.queryByText(comment.body)).not.toBeInTheDocument()
+    )
+  })
+
 
 })
