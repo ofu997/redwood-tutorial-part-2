@@ -1,0 +1,1 @@
+And finally, we need to take that postId and pass it on to the QUERY in the cell:
